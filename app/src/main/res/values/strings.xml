@@ -1,3 +1,29 @@
 <resources>
+    //MainActivity
     <string name="app_name">PM-Manager</string>
+    <string name="tab1">New</string>
+    <string name="tab2">Search</string>
+    <string name="tab3">Edit</string>
+    <string name="button">Start</string>
+    //finalcheck
+    <string name="description">camera picture</string>
+    <string name="buttonYes">Yes</string>
+    <string name="buttonNo">No</string>
+    <string name="checkText">Is this OK?</string>
+    <string name="hint">input</string>
+    //datainput
+    <string name="type">Type</string>
+    <string name="number">Number</string>
+    <string name="name">Name</string>
+    <string name="color">Color</string>
+    <string name="colortype">ColorType</string>
+    <string name="size1">Size1</string>
+    <string name="size2">Size2</string>
+    <string name="size3">Size3</string>
+    <string name="price">Price</string>
+    <string name="comment">Comment</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="error">error</string>
+
 </resources>
