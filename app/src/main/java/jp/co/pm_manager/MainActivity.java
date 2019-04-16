@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_PERMISSION = 1002;
     private Uri cameraUri;
     private String filePath;
-    public EditText editTextKey, editTextValue;
     private DBOpenHelper helper;
     private SQLiteDatabase db;
     @Override
@@ -245,6 +244,16 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageView2);
         Button buttonOk = findViewById(R.id.buttonOk);
         Button buttonCan = findViewById(R.id.buttonCan);
+        final EditText etType = findViewById(R.id.editText_Type);
+        final EditText etNumber = findViewById(R.id.editText_Number);
+        final EditText etName = findViewById(R.id.editText_Name);
+        final EditText etColor = findViewById(R.id.editText_Color);
+        final EditText etColorType = findViewById(R.id.editText_ColorType);
+        final EditText etSize1 = findViewById(R.id.editText_Size1);
+        final EditText etSize2 = findViewById(R.id.editText_Size2);
+        final EditText etSize3 = findViewById(R.id.editText_Size3);
+        final EditText etPrice = findViewById(R.id.editText_Price);
+        final EditText etComment = findViewById(R.id.editText_Comment);
         imageView.setImageURI(cameraUri);
         registerDatabase(filePath);
 
@@ -259,9 +268,17 @@ public class MainActivity extends AppCompatActivity {
                     db = helper.getWritableDatabase();
                 }
 
-                String key = editTextKey.getText().toString();
-                String value = editTextValue.getText().toString();
-                insertData(db, key, Integer.valueOf(value));
+                String type = etType.getText().toString();
+                String number = etNumber.getText().toString();
+                String name = etName.getText().toString();
+                String color = etColor.getText().toString();
+                String colortype = etColorType.getText().toString();
+                String size1 = etSize1.getText().toString();
+                String size2 = etSize2.getText().toString();
+                String size3 = etSize3.getText().toString();
+                String price = etPrice.getText().toString();
+                String comment = etComment.getText().toString();
+                insertData(db, type, number, name, color, colortype, size1, size2, size3, price, comment);
 
                 cameraIntent();
             }
@@ -273,13 +290,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void insertData(SQLiteDatabase db, String com, int price){
+    private void insertData(SQLiteDatabase db,
+                            String type, String number,
+                            String name, String color,
+                            String colortype, String size1,
+                            String size2, String size3,
+                            String price, String comment){
 
         ContentValues values = new ContentValues();
-        values.put("company", com);
-        values.put("stockprice", price);
+        values.put("type", type);
+        values.put("number", number);
+        values.put("name", name);
+        values.put("color", color);
+        values.put("colortype", colortype);
+        values.put("size1", size1);
+        values.put("size2", size2);
+        values.put("size3", size3);
+        values.put("price", price);
+        values.put("comment", comment);
 
-        db.insert("testdb", null, values);
+        db.insert("Main_DB", null, values);
     }
 
 }

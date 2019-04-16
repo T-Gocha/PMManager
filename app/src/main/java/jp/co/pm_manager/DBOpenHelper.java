@@ -54,9 +54,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     // データベースをバージョンアップした時に実行される処理
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(
-                SQL_DELETE_ENTRIES
-        );
+        db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
