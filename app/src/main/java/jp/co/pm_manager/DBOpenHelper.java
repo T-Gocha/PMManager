@@ -19,7 +19,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SIZE2 = "size2";
     private static final String COLUMN_SIZE3 = "size3";
     private static final String COLUMN_PRICE = "price";
-    private static final String COLUMN_COMMENT = "Comment";
+    private static final String COLUMN_COMMENT = "comment";
     // データベースのバージョン(2,3と挙げていくとonUpgradeメソッドが実行される)
     private static final int VERSION = 1;
     private static final String SQL_CREATE_ENTRIES =

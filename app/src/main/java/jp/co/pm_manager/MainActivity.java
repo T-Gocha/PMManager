@@ -11,8 +11,10 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,20 +36,28 @@ public class MainActivity extends AppCompatActivity {
     private String filePath;
     private DBOpenHelper helper;
     private SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("debug","onCreate()");
+        Log.d("debug", "onCreate()");
         setRegistration();
     }
 
     //登録初期画面
-    private void setRegistration(){
+    private void setRegistration() {
         setContentView(R.layout.activity_main);
-        Button cameraButton = findViewById(R.id.camera_button);
+        OriginalFragmentPagerAdapter adapter = new OriginalFragmentPagerAdapter(getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
         checkPermissionExStorage();
         checkPermissionCamera();
 
+/*
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,29 +72,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+*/
 
     }
 
-    private void cameraIntent(){
-        Log.d("debug","cameraIntent()");
+    private void cameraIntent() {
+        Log.d("debug", "cameraIntent()");
 
         // 保存先のフォルダーを作成するケース
-//        File cameraFolder = new File(
-//                Environment.getExternalStoragePublicDirectory(
-//                        Environment.DIRECTORY_PICTURES),"IMG");
-//        cameraFolder.mkdirs();
+        //        File cameraFolder = new File(
+        //                Environment.getExternalStoragePublicDirectory(
+        //                        Environment.DIRECTORY_PICTURES),"IMG");
+        //        cameraFolder.mkdirs();
 
         // 保存先のフォルダーをカメラに指定した場合
         File cameraFolder = new File(
                 Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DCIM),"Camera");
+                        Environment.DIRECTORY_DCIM), "Camera");
 
 
         // 保存ファイル名
         String fileName = new SimpleDateFormat(
                 "ddHHmmss", Locale.US).format(new Date());
-        filePath = String.format("%s/%s.jpg", cameraFolder.getPath(),fileName);
-        Log.d("debug","filePath:"+filePath);
+        filePath = String.format("%s/%s.jpg", cameraFolder.getPath(), fileName);
+        Log.d("debug", "filePath:" + filePath);
 
         // capture画像のファイルパス
         File cameraFile = new File(filePath);
@@ -97,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
         startActivityForResult(intent, RESULT_CAMERA);
 
-        Log.d("debug","startActivityForResult()");
+        Log.d("debug", "startActivityForResult()");
     }
 
     @Override
@@ -105,11 +116,10 @@ public class MainActivity extends AppCompatActivity {
                                     int resultCode, Intent intent) {
         if (requestCode == RESULT_CAMERA) {
 
-            if(cameraUri != null){
+            if (cameraUri != null) {
                 setFinalCheck();
-            }
-            else{
-                Log.d("debug","cameraUri == null");
+            } else {
+                Log.d("debug", "cameraUri == null");
             }
         }
     }
@@ -121,32 +131,32 @@ public class MainActivity extends AppCompatActivity {
         contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         contentValues.put("_data", file);
         contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
     }
 
     // Runtime Permission check
-    private void checkPermissionExStorage(){
+    private void checkPermissionExStorage() {
         // 既に許可している
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED){
-            Log.i("info","Write external storage permission confirmed.");
+                PackageManager.PERMISSION_GRANTED) {
+            Log.i("info", "Write external storage permission confirmed.");
         }
         // 拒否していた場合
-        else{
+        else {
             requestPermissionExStorage();
         }
     }
 
-    private void checkPermissionCamera(){
+    private void checkPermissionCamera() {
         // 既に許可している
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED){
-            Log.i("info","Camera permission confirmed.");
+                PackageManager.PERMISSION_GRANTED) {
+            Log.i("info", "Camera permission confirmed.");
         }
         // 拒否していた場合
-        else{
+        else {
             requestPermissionCamera();
         }
     }
@@ -200,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        Log.d("debug","onRequestPermissionsResult()");
+        Log.d("debug", "onRequestPermissionsResult()");
 
         if (requestCode == REQUEST_PERMISSION) {
             // 使用が許可された
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("info","Permission request success");
+                Log.i("info", "Permission request success");
             } else {
                 // それでも拒否された時の対応
                 Toast toast = Toast.makeText(this,
@@ -214,8 +224,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     //画像確認画面
-    private void setFinalCheck(){
+    private void setFinalCheck() {
         setContentView(R.layout.finalcheck);
         ImageView imageView = findViewById(R.id.image_view);
         Button buttonYes = findViewById(R.id.buttonYes);
@@ -239,46 +250,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //データ入力画面
-    private void setDataInput(){
+    private void setDataInput() {
         setContentView(R.layout.datainput);
         ImageView imageView = findViewById(R.id.imageView2);
         Button buttonOk = findViewById(R.id.buttonOk);
         Button buttonCan = findViewById(R.id.buttonCan);
-        final EditText etType = findViewById(R.id.editText_Type);
-        final EditText etNumber = findViewById(R.id.editText_Number);
-        final EditText etName = findViewById(R.id.editText_Name);
-        final EditText etColor = findViewById(R.id.editText_Color);
-        final EditText etColorType = findViewById(R.id.editText_ColorType);
-        final EditText etSize1 = findViewById(R.id.editText_Size1);
-        final EditText etSize2 = findViewById(R.id.editText_Size2);
-        final EditText etSize3 = findViewById(R.id.editText_Size3);
-        final EditText etPrice = findViewById(R.id.editText_Price);
-        final EditText etComment = findViewById(R.id.editText_Comment);
+
+        final EditText[] allEditText = {
+                findViewById(R.id.editText_Type),
+                findViewById(R.id.editText_Number),
+                findViewById(R.id.editText_Name),
+                findViewById(R.id.editText_Color),
+                findViewById(R.id.editText_ColorType),
+                findViewById(R.id.editText_Size1),
+                findViewById(R.id.editText_Size2),
+                findViewById(R.id.editText_Size3),
+                findViewById(R.id.editText_Price),
+                findViewById(R.id.editText_Comment)
+        };
+        final String[] tag = {"type", "number", "color", "colortype", "size1", "size2", "size3", "price", "comment"};
+        final String[] value = {
+                allEditText[0].getText().toString(),
+                allEditText[1].getText().toString(),
+                allEditText[2].getText().toString(),
+                allEditText[3].getText().toString(),
+                allEditText[4].getText().toString(),
+                allEditText[5].getText().toString(),
+                allEditText[6].getText().toString(),
+                allEditText[7].getText().toString(),
+                allEditText[8].getText().toString(),
+                allEditText[9].getText().toString()
+        };
         imageView.setImageURI(cameraUri);
         registerDatabase(filePath);
 
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(helper == null){
+                if (helper == null) {
                     helper = new DBOpenHelper(getApplicationContext());
                 }
 
-                if(db == null){
+                if (db == null) {
                     db = helper.getWritableDatabase();
                 }
-
-                String type = etType.getText().toString();
-                String number = etNumber.getText().toString();
-                String name = etName.getText().toString();
-                String color = etColor.getText().toString();
-                String colortype = etColorType.getText().toString();
-                String size1 = etSize1.getText().toString();
-                String size2 = etSize2.getText().toString();
-                String size3 = etSize3.getText().toString();
-                String price = etPrice.getText().toString();
-                String comment = etComment.getText().toString();
-                insertData(db, type, number, name, color, colortype, size1, size2, size3, price, comment);
+                for (int i = 0; i < 10; i++) {
+                    tag[i] = allEditText[i].getText().toString();
+                }
+                insertData(db, "Main_DB", tag, value);
 
                 cameraIntent();
             }
@@ -290,26 +309,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void insertData(SQLiteDatabase db,
-                            String type, String number,
-                            String name, String color,
-                            String colortype, String size1,
-                            String size2, String size3,
-                            String price, String comment){
 
+    private void insertData(SQLiteDatabase db, String dbName, String[] tag, String[] value) {
         ContentValues values = new ContentValues();
-        values.put("type", type);
-        values.put("number", number);
-        values.put("name", name);
-        values.put("color", color);
-        values.put("colortype", colortype);
-        values.put("size1", size1);
-        values.put("size2", size2);
-        values.put("size3", size3);
-        values.put("price", price);
-        values.put("comment", comment);
-
-        db.insert("Main_DB", null, values);
+        for (int i = 0; i < tag.length; i++) {
+            values.put(tag[i], value[i]);
+            db.insert(dbName, null, values);
+        }
     }
-
 }
