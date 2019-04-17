@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int RESULT_CAMERA = 1001;
     private final static int REQUEST_PERMISSION = 1002;
-    private Uri cameraUri;
-    private String filePath;
+    public static Uri cameraUri;
+    private static String filePath;
     private DBOpenHelper helper;
     private SQLiteDatabase db;
 
@@ -56,27 +56,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         checkPermissionExStorage();
         checkPermissionCamera();
-
-/*
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Android 6, API 23以上でパーミッシンの確認
-                if (Build.VERSION.SDK_INT >= 23) {
-                    //checkPermissionExStorage();
-                    //checkPermissionCamera();
-                    cameraIntent();
-                }
-                else {
-                    cameraIntent();
-                }
-            }
-        });
-*/
-
     }
 
-    private void cameraIntent() {
+    public void cameraIntent() {
         Log.d("debug", "cameraIntent()");
 
         // 保存先のフォルダーを作成するケース
@@ -117,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RESULT_CAMERA) {
 
             if (cameraUri != null) {
-                setFinalCheck();
+                setDataInput();
             } else {
                 Log.d("debug", "cameraUri == null");
             }
@@ -226,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //画像確認画面
+/*
     private void setFinalCheck() {
         setContentView(R.layout.finalcheck);
         ImageView imageView = findViewById(R.id.image_view);
@@ -248,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+*/
 
     //データ入力画面
     private void setDataInput() {

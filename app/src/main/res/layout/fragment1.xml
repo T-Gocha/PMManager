@@ -6,8 +6,10 @@
     tools:context=".Fragment1">
 
     <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/button" />
-
+        android:textSize="80sp"
+        android:fontFamily="serif-monospace"
+        android:text="@string/Start" />
 </FrameLayout>
