@@ -29,17 +29,11 @@ public class Fragment1 extends Fragment {
 
             @Override
             public void onClick(View v) {
-                // Android 6, API 23以上でパーミッシンの確認
-                if (Build.VERSION.SDK_INT >= 23) {
-                    //checkPermissionExStorage();
-                    //checkPermissionCamera();
-                    assert MActivity != null;
-                    MActivity.cameraIntent();
-                }
-                else {
-                    assert MActivity != null;
-                    MActivity.cameraIntent();
-                }
+                //checkPermissionExStorage();
+                //checkPermissionCamera();
+                //assert MActivity != null;
+                //MActivity.cameraIntent();
+                MActivity.setDataInput();
             }
         });
 

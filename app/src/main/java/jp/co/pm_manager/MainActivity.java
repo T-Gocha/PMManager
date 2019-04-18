@@ -41,41 +41,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("debug", "onCreate()");
-        setRegistration();
-    }
 
-    //登録初期画面
-    private void setRegistration() {
         setContentView(R.layout.activity_main);
         OriginalFragmentPagerAdapter adapter = new OriginalFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
-
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         checkPermissionExStorage();
         checkPermissionCamera();
+        setRegistration();
+    }
+
+    //登録初期画面
+    private void setRegistration() {
+        setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
     }
 
     public void cameraIntent() {
         Log.d("debug", "cameraIntent()");
 
-        // 保存先のフォルダーを作成するケース
-        //        File cameraFolder = new File(
-        //                Environment.getExternalStoragePublicDirectory(
-        //                        Environment.DIRECTORY_PICTURES),"IMG");
-        //        cameraFolder.mkdirs();
+          // 保存先のフォルダーを【作成するケース】
+                File cameraFolder = new File(
+                        Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES),"IMG");
+                cameraFolder.mkdirs();
 
-        // 保存先のフォルダーをカメラに指定した場合
-        File cameraFolder = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DCIM), "Camera");
-
+//        // 保存先のフォルダーを【カメラに指定するケース】
+//        File cameraFolder = new File(
+//                Environment.getExternalStoragePublicDirectory(
+//                        Environment.DIRECTORY_DCIM), "Camera");
 
         // 保存ファイル名
         String fileName = new SimpleDateFormat(
-                "ddHHmmss", Locale.US).format(new Date());
+                "yyyy_MM_dd__HH_mm_ss", Locale.JAPAN).format(new Date());
         filePath = String.format("%s/%s.jpg", cameraFolder.getPath(), fileName);
         Log.d("debug", "filePath:" + filePath);
 
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
         startActivityForResult(intent, RESULT_CAMERA);
-
         Log.d("debug", "startActivityForResult()");
     }
 
@@ -207,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //画像確認画面
 /*
+    //画像確認画面
     private void setFinalCheck() {
         setContentView(R.layout.finalcheck);
         ImageView imageView = findViewById(R.id.image_view);
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 */
 
     //データ入力画面
-    private void setDataInput() {
+    public void setDataInput() {
         setContentView(R.layout.datainput);
         ImageView imageView = findViewById(R.id.imageView2);
         Button buttonOk = findViewById(R.id.buttonOk);
@@ -253,18 +252,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.editText_Comment)
         };
         final String[] tag = {"type", "number", "color", "colortype", "size1", "size2", "size3", "price", "comment"};
-        final String[] value = {
-                allEditText[0].getText().toString(),
-                allEditText[1].getText().toString(),
-                allEditText[2].getText().toString(),
-                allEditText[3].getText().toString(),
-                allEditText[4].getText().toString(),
-                allEditText[5].getText().toString(),
-                allEditText[6].getText().toString(),
-                allEditText[7].getText().toString(),
-                allEditText[8].getText().toString(),
-                allEditText[9].getText().toString()
-        };
         imageView.setImageURI(cameraUri);
         registerDatabase(filePath);
 
@@ -278,8 +265,9 @@ public class MainActivity extends AppCompatActivity {
                 if (db == null) {
                     db = helper.getWritableDatabase();
                 }
+                String[] value = new String[10];
                 for (int i = 0; i < 10; i++) {
-                    tag[i] = allEditText[i].getText().toString();
+                    value[i] = allEditText[i].getText().toString();
                 }
                 insertData(db, "Main_DB", tag, value);
 
